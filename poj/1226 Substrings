@@ -1,0 +1,70 @@
+#include <stdio.h>  
+#include <string.h>  
+#include <stdlib.h>  
+#define MaxSize 105  
+char input[MaxSize][MaxSize];  
+int cmp(const void *a, const void *b)  
+{  
+    if (strlen((char *)a) == strlen((char *)b))  
+        return 0;  
+    else  
+        return ((strlen((char *)a) > strlen((char *)b))) ? 1 : -1;  
+}  
+void ReversealStr(char *str)  
+{  
+    int i, j = strlen(str) - 1;  
+    for (i = 0; i < j; i++, j--)  
+    {  
+        str[i] = str[i] ^ str[j];  
+        str[j] = str[i] ^ str[j];  
+        str[i] = str[i] ^ str[j];  
+    }  
+}  
+void CreateSubStr(char *S1, char *S2, int n1, int n2)  
+{  
+    int i, k = 0;  
+    for (i = n1; i <= n2; i++)  
+    {  
+        S2[k++] = S1[i];  
+    }  
+    S2[k] = '\0';  
+}  
+int main()  
+{  
+    int i,j,p,n,m,Max;  
+    scanf("%d", &m);  
+    while (m--)  
+    {  
+        Max = 0;  
+        memset(input, 0, sizeof(input));  
+        scanf("%d", &n);  
+        for (i = 0; i < n; i++)  
+            scanf("%s", input[i]);  
+        qsort(input, n, sizeof(input[0]), cmp);  
+        char s1[MaxSize];  
+        char s2[MaxSize];  
+        int len = strlen(input[0]);  
+        for (i = len - 1; i >= 0; i--)  
+        {  
+            memset(s1, 0, sizeof(s1));  
+            memset(s2, 0, sizeof(s2));  
+            int k = 0;  
+            for (j = i; j < len; j++)  
+            {  
+                CreateSubStr(input[0], s1, k, j);  
+                strcpy(s2, s1);  
+                ReversealStr(s2);  
+                for (p = 0; p < n; p++)  
+                {  
+                    if (!strstr(input[p], s1) && !strstr(input[p], s2))  
+                        break;  
+                }  
+                if (p == n && strlen(s1)>Max)  
+                    Max = strlen(s1);  
+                k++;  
+            }  
+        }  
+        printf("%d\n", Max);  
+    }  
+    return 0;  
+}  
